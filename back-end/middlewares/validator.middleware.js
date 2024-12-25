@@ -1,4 +1,3 @@
-import Joi from "joi";
 import {StatusCodes} from "http-status-codes";
 
 export const validatorMiddleware =(schema) =>(req, res, next) => {
@@ -12,5 +11,5 @@ export const validatorMiddleware =(schema) =>(req, res, next) => {
         });
     }
 
-    next(); // Proceed if validation passes
+    next();
 };

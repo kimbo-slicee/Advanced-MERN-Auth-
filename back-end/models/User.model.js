@@ -1,4 +1,8 @@
 import mongoose from "mongoose";
+import jwt from "jsonwebtoken";
+import bcrypt from "bcryptjs";
+
+
 const UserSchema=new mongoose.Schema({
     name:{
         type:String,
@@ -32,6 +36,10 @@ const UserSchema=new mongoose.Schema({
             line2: ""
         }
     },
+    zipCode:{
+      type:Number,
+      default:1e00
+    },
     lastLogin:{
         type:Date,
         default:Date.now()
@@ -42,4 +50,31 @@ const UserSchema=new mongoose.Schema({
     verificationTokenExpiresAt:Date
 
 
-},{timestamps:true})
+},{timestamps:true});
+// Create Function that's can Crypt The Password Before Saving User
+UserSchema.pre("save",async function (next){
+    const salt=await bcrypt.genSalt(10)
+    this.password=await bcrypt.hash(this.password,salt);
+    next()
+})
+UserSchema.pre("save",function (next){
+    this.verificationToken=Math.ceil(10000 + Math.random() *90000).toString();
+    this.verificationTokenExpiresAt=Date.now()+86400
+    next()
+})
+// Create Function that can Compare User Password With the Password Given
+UserSchema.methods.comparePassword=function (password){
+  return bcrypt.compareSync(this.password,password)
+}
+// Create Jwt
+UserSchema.methods.createToken=function (res){
+    const token =jwt.sign({id: this._id, name:this.name}, process.env.JWT_SECRETE, {algorithm: 'HS256', expiresIn: '1h',});
+    res.cookie("token",token,{
+        httpOnly:true,secure:process.env.NODE_ENV==="production",
+        sameSite:"strict",
+        maxAge:7*86400
+    })
+    return token;
+}
+// check if this token valid or note
+ export default mongoose.model('User',UserSchema)
