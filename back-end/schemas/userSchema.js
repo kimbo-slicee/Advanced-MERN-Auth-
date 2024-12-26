@@ -38,3 +38,8 @@ export const signupSchema = Joi.object({
         "string.empty": "address is required",
     }),
 });
+export const verificationCodeSchema=Joi.object({
+    verificationToken:Joi.string().required().messages({
+        "string.empty":"Validation Code Required"
+    })
+})

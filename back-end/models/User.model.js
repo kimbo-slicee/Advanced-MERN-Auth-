@@ -44,10 +44,15 @@ const UserSchema=new mongoose.Schema({
         type:Date,
         default:Date.now()
     },
+    isVerified:{
+        type:Boolean,
+        default:false
+    },
     restPasswordToken:String,
     restPasswordExpiresAt:Date,
     verificationToken:String,
-    verificationTokenExpiresAt:Date
+    verificationTokenExpiresAt:Date,
+
 
 
 },{timestamps:true});
@@ -59,7 +64,7 @@ UserSchema.pre("save",async function (next){
 })
 UserSchema.pre("save",function (next){
     this.verificationToken=Math.ceil(10000 + Math.random() *90000).toString();
-    this.verificationTokenExpiresAt=Date.now()+86400
+    this.verificationTokenExpiresAt=Date.now()+(7*86400)
     next()
 })
 // Create Function that can Compare User Password With the Password Given
