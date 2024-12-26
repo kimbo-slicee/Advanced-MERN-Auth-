@@ -6,10 +6,12 @@ import connectDB from "./config/mongoDB.js";
 import authRoutes from "./routes/auth.route.js";
 import notFoundErrorHandlerMiddleware from "./middlewares/notFoundErrorHandler.middleware.js";
 import errorHandlerMiddleware from "./middlewares/errorHandler.middleware.js";
+import cookieParser from "cookie-parser";
 const port =process.env.PORT || 5000;
 const app=express();
 app.use(cors());
-app.use(express.json());
+app.use(express.json());//allows to parse incoming JsonData
+app.use(cookieParser())// allows to parse the cookies Data
 // Authentication Routs
 app.use('/api/v1/auth',authRoutes);
 //Handling Errors

@@ -87,11 +87,18 @@ const {params:{token}, body:{password}}=req
     res.status(StatusCodes.OK).json({success:true, message: "Password Updated Successfully"})
 
 }
+//
+const checkAuth=async (req,res)=>{
+    const user=await UserModel.findById(req.userId).select("-password");
+    if(!user)throw new CustomErrors("User Not Found",StatusCodes.NOT_FOUND);
+    res.status(StatusCodes.OK).json({success:true,data:user})
+}
 export {
     login,
     signup,
     logout,
     verificationEmail,
     forgotPassword,
-    resetPassword
+    resetPassword,
+    checkAuth
 }
