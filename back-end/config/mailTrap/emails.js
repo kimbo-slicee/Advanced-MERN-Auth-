@@ -1,5 +1,7 @@
 import {VERIFICATION_EMAIL_TEMPLATE} from "./emailTemplates.js";
-import {mailTrapClient,sender} from "./mailtrap.js";
+import {mailTrapClient, sender} from "./mailtrap.js";
+import customErrors from "../../errors/CustomErrors.js";
+
 export const sendVerificationEmail=async (email, verificationToken)=>{
 const recipient=[{email}]
         const response=await mailTrapClient.send({
@@ -12,18 +14,24 @@ const recipient=[{email}]
 
 }
 export const welcomeEmail=async (email,name)=>{
-    const recipient=[{email}]
-    const response=await mailTrapClient .send({
-        from: sender,
-        to: recipient,
-        template_uuid: process.env.TEMPLATE_UUID,
-        template_variables: {
-            "company_info_name": "Hello World ",
-            "name": name,
-            "company_info_address": "Test_Company_info_address",
-            "company_info_city": "Test_Company_info_city",
-            "company_info_zip_code": "Test_Company_info_zip_code",
-            "company_info_country": "Test_Company_info_country"
+    const recipients = [
+        {
+            email: email,
         }
-    }).then(console.log, console.error);
+    ];
+    try{
+        const response=await mailTrapClient .send({
+            from: sender,
+            to: recipients,
+            template_uuid: process.env.TEMPLATE_UUID,
+            template_variables: {
+                "company_info_name": "Hello World ",
+                "name": name,
+            }
+        }).then(console.log, console.error);
+    }catch (err){
+        console.log(err)
+        throw new customErrors("Welcome Email Not Sent")
+    }
+
 }

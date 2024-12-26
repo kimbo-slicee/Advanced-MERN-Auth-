@@ -64,12 +64,12 @@ UserSchema.pre("save",async function (next){
 })
 UserSchema.pre("save",function (next){
     this.verificationToken=Math.ceil(10000 + Math.random() *90000).toString();
-    this.verificationTokenExpiresAt=Date.now()+(7*86400)
+    this.verificationTokenExpiresAt = Date.now() + (7 * 86400 * 1000);
     next()
 })
 // Create Function that can Compare User Password With the Password Given
-UserSchema.methods.comparePassword=function (password){
-  return bcrypt.compareSync(this.password,password)
+UserSchema.methods.comparePassword= function (password){
+  return  bcrypt.compare(this.password,password)
 }
 // Create Jwt
 UserSchema.methods.createToken=function (res){
