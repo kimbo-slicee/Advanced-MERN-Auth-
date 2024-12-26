@@ -1,7 +1,8 @@
 import UserModel from "../models/User.model.js";
 import {BadRequestError, CustomErrors,UnauthorizedError} from "../errors/index.js";
 import {getReasonPhrase, StatusCodes} from "http-status-codes";
-import {sendVerificationEmail, welcomeEmail } from "../config/mailTrap/emails.js";
+import {sendPasswordRestEmail, sendVerificationEmail, welcomeEmail} from "../config/mailTrap/emails.js";
+import * as crypto from "crypto";
 const signup=async (req,res)=>{
 const{email}=req.body;
 const user=await UserModel.findOne({email})
@@ -45,9 +46,33 @@ const logout=async (req,res)=>{
 res.clearCookie("token");
 res.status(StatusCodes.OK).json({success:true,message:"Logged Out successfully"})
 }
+// Forgot Password Controller
+const forgotPassword=async (req,res)=>{
+    const user=await UserModel.findOne({...req.body});
+    if(!user) throw new CustomErrors("User Withe Mail Doesn't Existe ",StatusCodes.NOT_FOUND);
+    // If The User Existe We Will send New Verification Code
+    const restToken=crypto.randomBytes(20).toString("hex")
+    //Important Note The Crypto It's now a built-in Node
+    // module. If you've depended on crypto, you should switch to the one that's built-in.
+    const restTokenExpirationDate=Date.now() +(60 * 60 * 1000)// 1 Hour
+    console.log(restToken,restTokenExpirationDate);
+    user.restPasswordToken=restToken;
+    user.restPasswordExpiresAt=restTokenExpirationDate;
+    await user.save();
+    //send Email
+    await sendPasswordRestEmail(user.email,`${process.env.CLINET_URL}/rest-password/${restToken}`);
+    res.status(StatusCodes.OK).json({success:true,message:"Password reset link sent to Your Email"})
+
+}
+// Reset Password Controller
+const  resetPassword=async (req,res)=>{
+
+}
 export {
     login,
     signup,
     logout,
-    verificationEmail
+    verificationEmail,
+    forgotPassword,
+    resetPassword
 }

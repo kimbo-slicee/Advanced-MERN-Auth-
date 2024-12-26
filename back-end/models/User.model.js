@@ -27,7 +27,7 @@ const UserSchema=new mongoose.Schema({
         type:String,
         required:[true,"Please Provide A Valid User Password"],
         minLength:5,
-        maxLength:20,
+        // maxLength:20,
     },
     address:{
         type:Object,
@@ -68,8 +68,8 @@ UserSchema.pre("save",function (next){
     next()
 })
 // Create Function that can Compare User Password With the Password Given
-UserSchema.methods.comparePassword= function (password){
-  return  bcrypt.compare(this.password,password)
+UserSchema.methods.comparePassword= async function (password){
+  return  await bcrypt.compare(this.password,password)
 }
 // Create Jwt
 UserSchema.methods.createToken=function (res){

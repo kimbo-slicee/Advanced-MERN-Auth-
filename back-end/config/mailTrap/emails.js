@@ -1,4 +1,4 @@
-import {VERIFICATION_EMAIL_TEMPLATE} from "./emailTemplates.js";
+import {PASSWORD_RESET_REQUEST_TEMPLATE, VERIFICATION_EMAIL_TEMPLATE} from "./emailTemplates.js";
 import {mailTrapClient, sender} from "./mailtrap.js";
 import customErrors from "../../errors/CustomErrors.js";
 
@@ -14,24 +14,26 @@ const recipient=[{email}]
 
 }
 export const welcomeEmail=async (email,name)=>{
-    const recipients = [
-        {
-            email: email,
-        }
-    ];
-    try{
+    const recipient = [{email: email}];
         const response=await mailTrapClient .send({
             from: sender,
-            to: recipients,
+            to: recipient,
             template_uuid: process.env.TEMPLATE_UUID,
             template_variables: {
                 "company_info_name": "Hello World ",
                 "name": name,
             }
-        }).then(console.log, console.error);
-    }catch (err){
-        console.log(err)
-        throw new customErrors("Welcome Email Not Sent")
-    }
+        }).then(_=>console.log(response))
+}
+// Rest Email Sender Function
+export const sendPasswordRestEmail=async (email,resetUrl)=>{
+    const recipient = [{email: email}];
+    const response =await mailTrapClient.send({
+        from:sender,
+        to:recipient,
+        subject:"Rest Your Email",
+        html:PASSWORD_RESET_REQUEST_TEMPLATE.replace("{resetURL}",resetUrl),
+        category:"Password Reset"
+    })
 
 }

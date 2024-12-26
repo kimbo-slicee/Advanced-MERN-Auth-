@@ -43,3 +43,9 @@ export const verificationCodeSchema=Joi.object({
         "string.empty":"Validation Code Required"
     })
 })
+export const forgetPasswordSchema=Joi.object({
+    email: Joi.string().email().required().messages({
+        "string.empty": "Email is required",
+        "string.email": "Invalid email format",
+    }),
+})
