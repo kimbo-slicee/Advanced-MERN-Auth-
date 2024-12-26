@@ -67,6 +67,9 @@ UserSchema.pre("save",function (next){
     this.verificationTokenExpiresAt = Date.now() + (7 * 86400 * 1000);
     next()
 })
+// set User Password
+
+
 // Create Function that can Compare User Password With the Password Given
 UserSchema.methods.comparePassword= async function (password){
   return  await bcrypt.compare(this.password,password)

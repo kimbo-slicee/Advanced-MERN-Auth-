@@ -1,8 +1,16 @@
 import UserModel from "../models/User.model.js";
-import {BadRequestError, CustomErrors,UnauthorizedError} from "../errors/index.js";
+import {BadRequestError, CustomErrors, UnauthorizedError} from "../errors/index.js";
 import {getReasonPhrase, StatusCodes} from "http-status-codes";
-import {sendPasswordRestEmail, sendVerificationEmail, welcomeEmail} from "../config/mailTrap/emails.js";
+import {
+    sendPasswordRestEmail,
+    sendPasswordRestSuccessEmail,
+    sendVerificationEmail,
+    welcomeEmail
+} from "../config/mailTrap/emails.js";
 import * as crypto from "crypto";
+import bcrypt from "bcryptjs";
+
+
 const signup=async (req,res)=>{
 const{email}=req.body;
 const user=await UserModel.findOne({email})
@@ -55,17 +63,28 @@ const forgotPassword=async (req,res)=>{
     //Important Note The Crypto It's now a built-in Node
     // module. If you've depended on crypto, you should switch to the one that's built-in.
     const restTokenExpirationDate=Date.now() +(60 * 60 * 1000)// 1 Hour
-    console.log(restToken,restTokenExpirationDate);
     user.restPasswordToken=restToken;
     user.restPasswordExpiresAt=restTokenExpirationDate;
     await user.save();
-    //send Email
+    //Send Email To Reset Password
     await sendPasswordRestEmail(user.email,`${process.env.CLINET_URL}/rest-password/${restToken}`);
     res.status(StatusCodes.OK).json({success:true,message:"Password reset link sent to Your Email"})
 
 }
 // Reset Password Controller
 const  resetPassword=async (req,res)=>{
+const {params:{token}, body:{password}}=req
+    if(!token || !password) throw new BadRequestError(getReasonPhrase(StatusCodes.BAD_REQUEST));
+    const user=await UserModel.findOne({restPasswordToken:token,restPasswordExpiresAt: {$gt:Date.now()}});
+    if (!user) throw new CustomErrors("User Not Found ",StatusCodes.NOT_FOUND);
+    const salt=await bcrypt.genSalt(10)
+    user.password=await bcrypt.hash(password, salt);
+    user.restPasswordToken=undefined;
+    user.restPasswordExpiresAt=undefined;
+    await user.save();
+    const {email}=user
+    await sendPasswordRestSuccessEmail(email);
+    res.status(StatusCodes.OK).json({success:true, message: "Password Updated Successfully"})
 
 }
 export {

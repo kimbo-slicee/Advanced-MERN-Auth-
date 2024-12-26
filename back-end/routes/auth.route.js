@@ -12,5 +12,5 @@ authRoutes.route('/verification').post(validatorMiddleware(verificationCodeSchem
 // Forgot Password Route
 authRoutes.route('/forgotPassword').post(validatorMiddleware(forgetPasswordSchema),forgotPassword)
 // Reset Password Route
-authRoutes.route('/rest_Password/:id').post(resetPassword)
+authRoutes.route('/resetPassword/:token').post(resetPassword)
 export default authRoutes;

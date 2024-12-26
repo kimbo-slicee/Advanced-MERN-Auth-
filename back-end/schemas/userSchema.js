@@ -25,10 +25,9 @@ export const signupSchema = Joi.object({
         "string.empty": "Email is required",
         "string.email": "Invalid email format",
     }),
-    phone: Joi.number().integer().min(18).required().messages({
-        "number.base": "phone number must be a number",
-        "number.min": "phone number must be at least 18",
-        "any.required": "phone number is required",
+    phone: Joi.string().min(10).required().messages({
+        "string.min": "phone number must be at least 10",
+        "string.required": "phone number is required",
     }),
     password: Joi.string().min(8).required().messages({
         "string.empty": "Password is required",
