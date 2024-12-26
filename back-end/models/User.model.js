@@ -76,5 +76,8 @@ UserSchema.methods.createToken=function (res){
     })
     return token;
 }
-// check if this token valid or note
- export default mongoose.model('User',UserSchema)
+UserSchema.methods.getVerificationToken=function (){
+    return this.verificationToken;
+}
+ const UserModel= mongoose.model("Users",UserSchema)
+export default UserModel
