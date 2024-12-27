@@ -15,8 +15,8 @@ app.use(cookieParser())// allows to parse the cookies Data
 // Authentication Routs
 app.use('/api/v1/auth',authRoutes);
 //Handling Errors
-app.use(notFoundErrorHandlerMiddleware)// handel 404 Errors
 app.use(errorHandlerMiddleware)// Handel API and DB Errors
+app.use(notFoundErrorHandlerMiddleware)// handel 404 Errors
 // Start server
 app.listen(port,()=>{
     //Connection To MongoDB

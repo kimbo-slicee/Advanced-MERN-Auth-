@@ -10,11 +10,11 @@ import {
 } from "../controllers/auth.controller.js";
 import {validatorMiddleware} from "../middlewares/validator.middleware.js";
 import {forgetPasswordSchema, loginSchema, signupSchema, verificationCodeSchema} from "../schemas/userSchema.js";
-import authMiddleware from "../middlewares/auth.middleware.js";
+import {authMiddleware} from "../middlewares/auth.middleware.js";
 const authRoutes=express.Router();
 
 // Auth Routes
-authRoutes.route('/checkAuth').get(authMiddleware,checkAuth)
+authRoutes.route('/profile').get(authMiddleware,checkAuth)
 authRoutes.route('/login').post(validatorMiddleware(loginSchema),login)
 authRoutes.route('/signup').post(validatorMiddleware(signupSchema),signup)
 authRoutes.route('/logout').post(logout);

@@ -1,14 +1,30 @@
-import {UnauthorizedError} from "../errors/index.js";
-import {getReasonPhrase, StatusCodes} from "http-status-codes";
 import jwt from "jsonwebtoken";
+import { UnauthorizedError } from "../errors/index.js";
+export const authMiddleware = (req, res, next) => {
+    try {
+        // Ensure cookies are available
+        const token = req.cookies?.token;
 
-const authMiddleware=(err,req,res,next)=>{
-const token=req.cookies.token;
-if(!token) throw new UnauthorizedError(getReasonPhrase(StatusCodes.UNAUTHORIZED));
-const decoded=jwt.decode(token,process.env.JWT_SECRETE);
-if(!decoded) throw new UnauthorizedError(getReasonPhrase(StatusCodes.UNAUTHORIZED));
-console.log(decoded)
-res.userId=decoded.id
-next()
-}
-export default authMiddleware
+        // Check if the token is present
+        if (!token) {
+            throw new UnauthorizedError("Unauthorized: No token provided");
+        }
+
+        // Verify the token
+        const decoded = jwt.verify(token, process.env.JWT_SECRETE);
+
+        // Attach user ID to the request object
+        req.userId = decoded.id;
+        // Proceed to the next middleware
+        next();
+    } catch (err) {
+        // Handle JWT-specific errors
+        if (err.name === "JsonWebTokenError") {
+            err = new UnauthorizedError("Unauthorized: Invalid token");
+        } else if (err.name === "TokenExpiredError") {
+            err = new UnauthorizedError("Unauthorized: Token expired");
+        }
+        // Pass the error to the error-handling middleware
+        next(err);
+    }
+};

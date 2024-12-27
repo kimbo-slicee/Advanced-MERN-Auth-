@@ -29,7 +29,8 @@ const user =await UserModel.findOne(
         if (!user) throw new BadRequestError("User Not Found");
         await user.updateOne({isVerified:true});
         const {name,email}=user
-        await welcomeEmail(name, email);
+        // send Mail after verification
+        await welcomeEmail(email, name);
         res.status(StatusCodes.OK).json({success:true,data:user,message:"Email Verified Successfully"})
 
 }
@@ -38,7 +39,7 @@ const login=async (req,res)=>{
     /* This User Inputs are Validated by using Validator middleware by implementing JOI functionality but You are
      Free if u want to Use Express
      Validator or your own Validation */
-    const{name,email,password}=req.body;
+    const{email,password}=req.body;
     //[1]:First Check if the User Existe
     const user=await UserModel.findOne({email})
     if(!user) throw new CustomErrors("User Not Found",StatusCodes.NOT_FOUND);
@@ -87,10 +88,10 @@ const {params:{token}, body:{password}}=req
     res.status(StatusCodes.OK).json({success:true, message: "Password Updated Successfully"})
 
 }
-//
+// Check User Validation Token
 const checkAuth=async (req,res)=>{
     const user=await UserModel.findById(req.userId).select("-password");
-    if(!user)throw new CustomErrors("User Not Found",StatusCodes.NOT_FOUND);
+    if(!user)throw new CustomErrors("User Not Found",StatusCodes.BAD_REQUEST);
     res.status(StatusCodes.OK).json({success:true,data:user})
 }
 export {

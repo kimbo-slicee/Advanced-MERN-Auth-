@@ -1,7 +1,7 @@
 import { CustomErrors } from "../errors/index.js";
 import { getReasonPhrase, StatusCodes } from "http-status-codes";
 import mongoose from "mongoose";
-const errorHandlerMiddleware =(err, req, res, next) => {
+const errorHandlerMiddleware =(err, req, res,next) => {
     if (err instanceof CustomErrors) {
         return res.status(err.statusCode).json({
             success: false,
@@ -48,7 +48,7 @@ const errorHandlerMiddleware =(err, req, res, next) => {
     return res.status(genericError.statusCode).json({
         success: false,
         message: genericError.message,
-        // Include stack trace only in development
+        name:err.name,
         ...(process.env.NODE_ENV === "development" && { stack: err.stack }),
     });
 };
