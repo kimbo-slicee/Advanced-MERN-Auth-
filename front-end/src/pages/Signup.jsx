@@ -6,7 +6,7 @@ import {Link} from "react-router-dom";
 import PasswordStrengthMeter from "../components/PasswordStrengthMeter.jsx";
 
 
-const Signup = (props) => {
+const Signup = ({props}) => {
     const [name,setName]=useState('');
     const [email , setEmail]=useState('');
     const [password, setPassword]=useState('');
