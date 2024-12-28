@@ -30,8 +30,8 @@ const Login = (props) => {
                     <Input icon={LockIcon} type="text" placeholder="Full Name" value={password}
                            onChange={(e) => setPassword(e.target.value)}/>
                     <div className="flex items-center mb-6">
-                        <Link to={'/forgot-password'} className="text-sm text-green-400 hover:underline">Forgot
-                            Password?</Link>
+                        <Link to={'/verify-email'} className="text-sm text-green-400 hover:underline">
+                            Forgot Password?</Link>
                     </div>
                     <motion.button
                         className="mt-5 w-full

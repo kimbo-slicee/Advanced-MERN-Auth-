@@ -3,6 +3,7 @@ import {Route, Routes} from "react-router-dom";
 import Home from "./pages/Home.jsx";
 import Login from "./pages/Login.jsx";
 import Signup from "./pages/Signup.jsx";
+import EmailVerification from "./pages/EmailVerification.jsx";
 const App=()=>{
   return (
      <div className="min-h-screen bg-gradient-to-br
@@ -16,6 +17,7 @@ const App=()=>{
           <Route path="/" element={<Home/>}/>
           <Route path="/login" element={<Login/>}/>
           <Route path="/signup" element={<Signup/>}/>
+          <Route path="/verify-email" element={<EmailVerification/>}/>
       </Routes>
      </div>
   )
