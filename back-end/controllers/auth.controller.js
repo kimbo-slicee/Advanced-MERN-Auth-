@@ -88,12 +88,6 @@ const {params:{token}, body:{password}}=req
     res.status(StatusCodes.OK).json({success:true, message: "Password Updated Successfully"})
 
 }
-// Check User Validation Token
-const checkAuth=async (req,res)=>{
-    const user=await UserModel.findById(req.userId).select("-password");
-    if(!user)throw new CustomErrors("User Not Found",StatusCodes.BAD_REQUEST);
-    res.status(StatusCodes.OK).json({success:true,data:user})
-}
 export {
     login,
     signup,
@@ -101,5 +95,4 @@ export {
     verificationEmail,
     forgotPassword,
     resetPassword,
-    checkAuth
 }
