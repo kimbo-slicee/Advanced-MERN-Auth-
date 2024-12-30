@@ -2,8 +2,8 @@ import { create } from 'zustand'
 import axios from 'axios'
 
 const API_URL="http://localhost:5000/api/v1"
-// axios.defaults.withCredentials = true;
-export const useAuthStore = create((set) => ({
+axios.defaults.withCredentials = true;
+export const useAuthStore = create((set,getState) => ({
 user: null,
 isAuthenticated: false,
 isLoading:false,
@@ -23,16 +23,26 @@ error: null,
     set({ isLoading: true ,error:null})
     try{
         const {data} = await axios.post(`${API_URL}/auth/verification`, {verificationToken:code});
-        console.log(data);
         set({user:data,isLoading:false,isAuthenticated:true,error:null})
         return data;
     }catch (error){
-        console.log(error)
         set({error:error.response.data.message,isLoading:false})
         throw error;
     }
 },
-    // login: async (email, password) => {}
+    // login function will be implemented in the next step
+    login: async (email, password) => {
+        set({isLoading: true, error: null})
+        try {
+            const {data} = await axios.post(`${API_URL}/auth/login`, {email, password});
+            set({user: data, isAuthenticated: true, isLoading: false, error: null});
+        } catch (error) {
+            set({error: error.response.data.message, isLoading: false})
+            throw error;
+        }
+    },
+
+
     checkAuth: async () => {
         set({isCheckingAuth: true, error: null});
         try {

@@ -1,16 +1,17 @@
-import React, {Fragment, useState} from 'react';
+import React, {useState} from 'react';
 import {motion} from "framer-motion";
 import Input from "../components/input.jsx";
 import {Loader, LockIcon, MailIcon} from "lucide-react";
 import {Link} from "react-router-dom";
+import {useAuthStore} from "../store/AuthStore.js";
 const Login = (props) => {
-    const handleLogin = (e) =>{
-        e.preventDefault();
-        console.log('login');
-    }
     const [email,setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [loading, setLoading] = useState(false);
+    const {isCheckingAuth,login,isLoading,error} = useAuthStore();
+    const handleLogin = (e) =>{
+        e.preventDefault();
+        login(name,password)
+    }
     return(
         <motion.div
             initial={{opacity: 0, y: 20}}
@@ -33,6 +34,7 @@ const Login = (props) => {
                         <Link to={'/verify-email'} className="text-sm text-green-400 hover:underline">
                             Forgot Password?</Link>
                     </div>
+                    {error && <p className="text-red-500 font-semibold text-sm mb-4">{error}</p>}
                     <motion.button
                         className="mt-5 w-full
                         py-3 px-4 bg-gradient-to-r from-green-500 to-emerald-600 text-white font-bold rounded-lg shadow-lg hover:from-green-600
@@ -41,9 +43,9 @@ const Login = (props) => {
                         whileHover={{scale: 1.05}}
                         whileTap={{scale: 0.95}}
                         type="submit"
-                        disabled={loading}
+                        disabled={isLoading}
                     >
-                        {loading ? <Loader className="animate-spin w-6 h-6 m-auto" size="1.5rem"/> : 'Login'}
+                        {isLoading ? <Loader className="animate-spin w-6 h-6 m-auto" size="1.5rem"/> : 'Login'}
                     </motion.button>
                 </form>
             </div>

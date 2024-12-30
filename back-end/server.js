@@ -10,7 +10,10 @@ import cookieParser from "cookie-parser";
 import userRoutes from "./routes/user.routes.js";
 const port =process.env.PORT || 5000;
 const app=express();
-app.use(cors());
+app.use(cors({
+    origin:`${process.env.CLINET_URL}`, // Your frontend URL
+    credentials: true, // Allows cookies to be sent
+}));
 app.use(express.json());//allows to parse incoming JsonData
 app.use(cookieParser())// allows to parse the cookies Data
 // Authentication Routs

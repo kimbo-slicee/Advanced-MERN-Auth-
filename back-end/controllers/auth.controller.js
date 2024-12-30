@@ -9,8 +9,6 @@ import {
 } from "../config/mailTrap/emails.js";
 import * as crypto from "crypto";
 import bcrypt from "bcryptjs";
-
-
 const signup=async (req,res)=>{
 const{email}=req.body;
 const user=await UserModel.findOne({email})

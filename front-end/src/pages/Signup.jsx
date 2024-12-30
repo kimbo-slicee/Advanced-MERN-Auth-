@@ -6,24 +6,24 @@ import {Link} from "react-router-dom";
 import PasswordStrengthMeter from "../components/PasswordStrengthMeter.jsx";
 import {useAuthStore} from "../store/authStore";
 import {useNavigate} from "react-router-dom";
-
-
+import {LoadingSpinner} from "../components/LoadingSpinner.jsx";
 const Signup = ({props}) => {
     const [name,setName]=useState('');
     const [email , setEmail]=useState('');
     const [password, setPassword]=useState('');
     const navigate = useNavigate();
-    const {signup,error,isLoading} = useAuthStore();
+    const {isCheckingAuth,signup,error,isLoading} = useAuthStore();
    const handleSinUp=async (e)=> {
         e.preventDefault();
         try{
         await signup(email,password,name);
-        navigate("/verify-email")
+        navigate("/")
         }catch (error){
             console.error(error);
         }
     }
 
+if(isCheckingAuth) return <LoadingSpinner/>
 return (
     <motion.div
     initial={{opacity:0, y:20}}
