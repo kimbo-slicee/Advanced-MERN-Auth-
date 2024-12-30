@@ -20,8 +20,8 @@ const Login = (props) => {
             className="max-w-md w-full bg-gray-800 bg-opacity-50
                 backdrop-filter backdrop-blur-xl rounded-2xl shadow-x1 overflow-hidden">
             <div className="p-8">
-                <h2 className="text-3xl font-semibold mb-6 uppercase text-center bg-green-to-r from-green-400 to-emerald-500 text-transparent
-                    bg-clip-text">
+                <h2 className="text-3xl  mb-6 text-center
+                bg-gradient-to-r from-green-400 to-emerald-500 text-transparent bg-clip-text font-semibold uppercase">
                     Welcome Back
                 </h2>
                 <form onSubmit={handleLogin}>
@@ -43,7 +43,7 @@ const Login = (props) => {
                         type="submit"
                         disabled={loading}
                     >
-                        {loading?<Loader className="animate-spin w-6 h-6 m-auto" size="1.5rem"/>:'Login'}
+                        {loading ? <Loader className="animate-spin w-6 h-6 m-auto" size="1.5rem"/> : 'Login'}
                     </motion.button>
                 </form>
             </div>

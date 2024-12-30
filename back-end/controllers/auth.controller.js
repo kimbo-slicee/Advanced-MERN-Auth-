@@ -14,19 +14,19 @@ import bcrypt from "bcryptjs";
 const signup=async (req,res)=>{
 const{email}=req.body;
 const user=await UserModel.findOne({email})
-if(user)throw new BadRequestError("This Email ALl Ready Existe");
+if(user)throw new BadRequestError("User Already Existe");
 const registerUser=await UserModel.create({...req.body})
  // Generate Token For the new User
 const token =registerUser.createToken(res);
 await sendVerificationEmail(email,registerUser.getVerificationToken())
-res.status(StatusCodes.CREATED).json({success:true,token,message:"User Has Ben Registered Successfully"})
+res.status(StatusCodes.CREATED).json({success:true,message:"User Has Ben Registered Successfully",token:token})
 }
 // Email Verification
 const verificationEmail=async (req, res)=>{
 
 const user =await UserModel.findOne(
     {...req.body, verificationTokenExpiresAt: { $gt: Date.now() }}).select("-password");
-        if (!user) throw new BadRequestError("User Not Found");
+        if (!user) throw new BadRequestError("Invalid Verification Code");
         await user.updateOne({isVerified:true});
         const {name,email}=user
         // send Mail after verification

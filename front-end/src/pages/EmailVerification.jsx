@@ -3,18 +3,17 @@ import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 // import { useAuthStore } from "../store/authStore";
 import toast from "react-hot-toast";
+import {useAuthStore} from "../store/AuthStore.js";
 
 const EmailVerificationPage = () => {
     const [code, setCode] = useState(["", "", "", "", "", ""]);
     const inputRefs = useRef([]);
     const navigate = useNavigate();
-    const isLoading = false;
+    const { error, isLoading, verifyEmail } = useAuthStore();
 
-    // const { error, isLoading, verifyEmail } = useAuthStore();
-
+    // handle change in input fields
     const handleChange = (index, value) => {
         const newCode = [...code];
-
         // Handle pasted content
         if (value.length > 1) {
             const pastedCode = value.slice(0, 6).split("");
@@ -22,37 +21,38 @@ const EmailVerificationPage = () => {
                 newCode[i] = pastedCode[i] || "";
             }
             setCode(newCode);
-
             // Focus on the last non-empty input or the first empty one
             const lastFilledIndex = newCode.findLastIndex((digit) => digit !== "");
             const focusIndex = lastFilledIndex < 5 ? lastFilledIndex + 1 : 5;
             inputRefs.current[focusIndex].focus();
         } else {
             newCode[index] = value;
-            setCode(newCode);
-
-            // Move focus to the next input field if value is entered
+            setCode(newCode);            // Move focus to the next input field if value is entered
             if (value && index < 5) {
                 inputRefs.current[index + 1].focus();
             }
         }
     };
 
+    // handle backspace key press
     const handleKeyDown = (index, e) => {
         if (e.key === "Backspace" && !code[index] && index > 0) {
             inputRefs.current[index - 1].focus();
         }
     };
 
+    // handle form submission
     const handleSubmit = async (e) => {
         e.preventDefault();
         const verificationCode = code.join("");
         try {
             await verifyEmail(verificationCode);
-            navigate("/");
             toast.success("Email verified successfully");
+            navigate("/");
         } catch (error) {
-            console.log(error);
+            toast.error("Invalid verification code");
+            setCode(["", "", "", "", "", ""]);
+            inputRefs.current[0].focus();
         }
     };
 
@@ -92,6 +92,7 @@ const EmailVerificationPage = () => {
                         ))}
                     </div>
                     {/*{error && <p className='text-red-500 font-semibold mt-2'>{error}</p>}*/}
+                    {error && <p className='text-red-500 font-semibold mt-2'>{error}</p>}
                     <motion.button
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}

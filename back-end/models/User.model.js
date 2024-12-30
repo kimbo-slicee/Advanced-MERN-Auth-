@@ -16,29 +16,10 @@ const UserSchema=new mongoose.Schema({
         unique:true,
         match:/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/
     },
-    phone:{
-        type:String,
-        required:[true,"Please Provide User Phone "],
-        minLength:5,
-        maxLength:20,
-        unique:true
-    },
     password:{
         type:String,
         required:[true,"Please Provide A Valid User Password"],
         minLength:5,
-        // maxLength:20,
-    },
-    address:{
-        type:Object,
-        default:{
-            line1: "",
-            line2: ""
-        }
-    },
-    zipCode:{
-      type:Number,
-      default:1e00
     },
     lastLogin:{
         type:Date,
@@ -53,8 +34,6 @@ const UserSchema=new mongoose.Schema({
     verificationToken:String,
     verificationTokenExpiresAt:Date,
 
-
-
 },{timestamps:true});
 // Create Function that's can Crypt The Password Before Saving User
 UserSchema.pre("save",async function (next){
@@ -63,7 +42,7 @@ UserSchema.pre("save",async function (next){
     next()
 })
 UserSchema.pre("save",function (next){
-    this.verificationToken=Math.ceil(10000 + Math.random() *90000).toString();
+    this.verificationToken=Math.ceil(100000 + Math.random() *900000).toString();
     this.verificationTokenExpiresAt = Date.now() + (7 * 86400 * 1000);
     next()
 })
