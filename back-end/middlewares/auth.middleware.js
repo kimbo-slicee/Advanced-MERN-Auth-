@@ -4,15 +4,12 @@ export const authMiddleware = (req, res, next) => {
     try {
         // Ensure cookies are available
         const token = req.cookies?.token;
-
         // Check if the token is present
         if (!token) {
             throw new UnauthorizedError("Unauthorized: No token provided");
         }
-
         // Verify the token
-        const decoded = jwt.verify(token, process.env.JWT_SECRETE);
-
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
         // Attach user ID to the request object
         req.userId = decoded.id;
         // Proceed to the next middleware

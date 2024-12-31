@@ -9,6 +9,8 @@ import {
 } from "../config/mailTrap/emails.js";
 import * as crypto from "crypto";
 import bcrypt from "bcryptjs";
+
+
 const signup=async (req,res)=>{
 const{email}=req.body;
 const user=await UserModel.findOne({email})
@@ -24,11 +26,17 @@ const verificationEmail=async (req, res)=>{
 
 const user =await UserModel.findOne(
     {...req.body, verificationTokenExpiresAt: { $gt: Date.now() }}).select("-password");
-        if (!user) throw new BadRequestError("Invalid Verification Code");
-        await user.updateOne({isVerified:true});
-        const {name,email}=user
+        if (!user) throw new BadRequestError("User Not Found");
+        const {email, name} = user;
         // send Mail after verification
         await welcomeEmail(email, name);
+        // Update User Document after Verification
+        user.isVerified = true;
+        user.verificationToken = undefined;
+        user.password = undefined;
+        user.verificationTokenExpiresAt = undefined;
+        await user.save();
+        // Send Response
         res.status(StatusCodes.OK).json({success:true,data:user,message:"Email Verified Successfully"})
 
 }

@@ -1,26 +1,23 @@
 import FloatingShape from "./components/FloatingShape.jsx";
 import {Navigate, Route, Routes} from "react-router-dom";
-import Home from "./pages/Home.jsx";
 import Login from "./pages/Login.jsx";
 import Signup from "./pages/Signup.jsx";
 import EmailVerification from "./pages/EmailVerification.jsx";
 import {Toaster} from "react-hot-toast";
 import {useAuthStore} from "./store/AuthStore.js";
 import {useEffect} from "react";
+import DashboardPage from "./pages/DashboardPage.jsx";
+import {LoadingSpinner} from "./components/LoadingSpinner.jsx";
 const ProtectedRoute = ({ children }) => {
     const { isAuthenticated, user } = useAuthStore();
-
     if (!isAuthenticated) {
         return <Navigate to='/login' replace />;
     }
-
     if (!user.isVerified) {
         return <Navigate to='/verify-email' replace />;
     }
-
     return children;
 };
-
 // redirect authenticated users to the home page
 const RedirectAuthenticatedUser = ({ children }) => {
     const { isAuthenticated, user } = useAuthStore();
@@ -35,11 +32,12 @@ const RedirectAuthenticatedUser = ({ children }) => {
 const App=()=>{
     const {isCheckingAuth,checkAuth,isAuthenticated,user}=useAuthStore()
     useEffect(()=>{
-            checkAuth()
+        checkAuth().then().catch()
         console.log(isAuthenticated,user)
 
     },[checkAuth])
-  return (
+    if (isCheckingAuth) return <LoadingSpinner />;
+    return (
      <div className="min-h-screen bg-gradient-to-br
      from-gray-900 via-green-900 to-emerald-900 flex
      items-center justify-center relative overflow-hidden ">
@@ -50,7 +48,7 @@ const App=()=>{
       <Routes>
           <Route path="/" element={
                 <ProtectedRoute>
-                    <Home/>
+                    <DashboardPage/>
                 </ProtectedRoute>
           }/>
           <Route path="/login" element={

@@ -23,7 +23,8 @@ error: null,
     set({ isLoading: true ,error:null})
     try{
         const {data} = await axios.post(`${API_URL}/auth/verification`, {verificationToken:code});
-        set({user:data,isLoading:false,isAuthenticated:true,error:null})
+        set({user:data.data,isLoading:false,isAuthenticated:true,error:null})
+        console.log(data)
         return data;
     }catch (error){
         set({error:error.response.data.message,isLoading:false})
@@ -42,17 +43,18 @@ error: null,
         }
     },
 
-
+    // checkAuth User Function
     checkAuth: async () => {
         set({isCheckingAuth: true, error: null});
         try {
             const {data} = await axios.get(`${API_URL}/user/profile`);
             set({user: data, isAuthenticated: true, isCheckingAuth: false});
         } catch (error) {
-            console.log(error);
             set({error: error.response.data.message, isCheckingAuth: false});
             throw error;
         }
     }
+    // logout function will be implemented in the next step
+    // forgotPassword function will be implemented in the next step
 }))
 

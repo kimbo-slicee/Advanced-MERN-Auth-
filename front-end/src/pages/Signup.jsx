@@ -7,6 +7,7 @@ import PasswordStrengthMeter from "../components/PasswordStrengthMeter.jsx";
 import {useAuthStore} from "../store/authStore";
 import {useNavigate} from "react-router-dom";
 import {LoadingSpinner} from "../components/LoadingSpinner.jsx";
+import toast from "react-hot-toast";
 const Signup = ({props}) => {
     const [name,setName]=useState('');
     const [email , setEmail]=useState('');
@@ -17,13 +18,15 @@ const Signup = ({props}) => {
         e.preventDefault();
         try{
         await signup(email,password,name);
-        navigate("/")
+        toast.success("Account Created Successfully, Please Verify Your Email")
+        navigate("/verify-email")
         }catch (error){
+            toast.error(error.response.data.message)
             console.error(error);
         }
     }
 
-if(isCheckingAuth) return <LoadingSpinner/>
+// if(isCheckingAuth) return <LoadingSpinner/>
 return (
     <motion.div
     initial={{opacity:0, y:20}}

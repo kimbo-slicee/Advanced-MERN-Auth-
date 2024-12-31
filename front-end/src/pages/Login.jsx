@@ -4,14 +4,16 @@ import Input from "../components/input.jsx";
 import {Loader, LockIcon, MailIcon} from "lucide-react";
 import {Link} from "react-router-dom";
 import {useAuthStore} from "../store/AuthStore.js";
+import {LoadingSpinner} from "../components/LoadingSpinner.jsx";
 const Login = (props) => {
     const [email,setEmail] = useState('');
     const [password, setPassword] = useState('');
     const {isCheckingAuth,login,isLoading,error} = useAuthStore();
     const handleLogin = (e) =>{
         e.preventDefault();
-        login(name,password)
+        login(email,password).then(()=>console.log("login successfully")).catch()
     }
+    if(isCheckingAuth) return <LoadingSpinner/>
     return(
         <motion.div
             initial={{opacity: 0, y: 20}}

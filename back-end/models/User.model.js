@@ -18,7 +18,10 @@ const UserSchema=new mongoose.Schema({
     },
     password:{
         type:String,
-        required:[true,"Please Provide A Valid User Password"],
+        required: function () {
+            // Make password required only if the document is new
+            return this.isNew;
+        },
         minLength:5,
     },
     lastLogin:{
@@ -36,11 +39,13 @@ const UserSchema=new mongoose.Schema({
 
 },{timestamps:true});
 // Create Function that's can Crypt The Password Before Saving User
-UserSchema.pre("save",async function (next){
-    const salt=await bcrypt.genSalt(10)
-    this.password=await bcrypt.hash(this.password,salt);
-    next()
-})
+UserSchema.pre("save", async function (next) {
+    if (this.isModified("password")) {
+        const salt = await bcrypt.genSalt(10);
+        this.password = await bcrypt.hash(this.password, salt);
+    }
+    next();
+});
 UserSchema.pre("save",function (next){
     this.verificationToken=Math.ceil(100000 + Math.random() *900000).toString();
     this.verificationTokenExpiresAt = Date.now() + (7 * 86400 * 1000);
@@ -55,7 +60,7 @@ UserSchema.methods.comparePassword= async function (password){
 }
 // Create Jwt
 UserSchema.methods.createToken=function (res){
-    const token =jwt.sign({id: this._id, name:this.name}, process.env.JWT_SECRETE, {algorithm: 'HS256', expiresIn: '1h',});
+    const token =jwt.sign({id: this._id, name:this.name}, process.env.JWT_SECRET, {algorithm: 'HS256', expiresIn: '1h',});
     res.cookie("token",token,{
         httpOnly:true,secure:process.env.NODE_ENV==="production",
         sameSite:"strict",

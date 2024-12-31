@@ -1,7 +1,8 @@
-import {NotFoundError} from "../errors/index.js";
+import {StatusCodes} from "http-status-codes";
+const notFoundErrorHandlerMiddleware = (req, res, next) => {
+    res.status(StatusCodes.NOT_FOUND).json({
+        message: "Route not found",
+    });
+};
 
-const notFoundErrorHandlerMiddleware=(err,req,res,next)=>{
-    console.log(err)
-    next(new NotFoundError("Route not found"));
-}
-export default notFoundErrorHandlerMiddleware
+export default notFoundErrorHandlerMiddleware;
