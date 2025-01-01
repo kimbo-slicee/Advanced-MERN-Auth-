@@ -19,7 +19,6 @@ const UserSchema=new mongoose.Schema({
     password:{
         type:String,
         required: function () {
-            // Make password required only if the document is new
             return this.isNew;
         },
         minLength:5,
@@ -60,11 +59,13 @@ UserSchema.methods.comparePassword= async function (password){
 }
 // Create Jwt
 UserSchema.methods.createToken=function (res){
-    const token =jwt.sign({id: this._id, name:this.name}, process.env.JWT_SECRET, {algorithm: 'HS256', expiresIn: '1h',});
-    res.cookie("token",token,{
-        httpOnly:true,secure:process.env.NODE_ENV==="production",
-        sameSite:"strict",
-        maxAge:7*86400
+    const token =jwt.sign({id: this._id, name:this.name},
+        process.env.JWT_SECRET,  {algorithm: 'HS256', expiresIn: '7d',});
+        res.cookie("token",token,{
+            httpOnly:true,
+            secure:process.env.NODE_ENV==="production",
+            sameSite:"strict",
+            maxAge:7*86400
     })
     return token;
 }

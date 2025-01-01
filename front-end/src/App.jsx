@@ -8,6 +8,7 @@ import {useAuthStore} from "./store/AuthStore.js";
 import {useEffect} from "react";
 import DashboardPage from "./pages/DashboardPage.jsx";
 import {LoadingSpinner} from "./components/LoadingSpinner.jsx";
+import {ForgetPassword} from "./pages/ForgetPassword.jsx";
 const ProtectedRoute = ({ children }) => {
     const { isAuthenticated, user } = useAuthStore();
     if (!isAuthenticated) {
@@ -21,7 +22,7 @@ const ProtectedRoute = ({ children }) => {
 // redirect authenticated users to the home page
 const RedirectAuthenticatedUser = ({ children }) => {
     const { isAuthenticated, user } = useAuthStore();
-
+    console.log(isAuthenticated,user)
     if (isAuthenticated && user.isVerified) {
         return <Navigate to='/' replace />;
     }
@@ -30,11 +31,9 @@ const RedirectAuthenticatedUser = ({ children }) => {
 };
 
 const App=()=>{
-    const {isCheckingAuth,checkAuth,isAuthenticated,user}=useAuthStore()
+    const {isCheckingAuth,checkAuth}=useAuthStore()
     useEffect(()=>{
-        checkAuth().then().catch()
-        console.log(isAuthenticated,user)
-
+        checkAuth()
     },[checkAuth])
     if (isCheckingAuth) return <LoadingSpinner />;
     return (
@@ -62,6 +61,11 @@ const App=()=>{
                 </RedirectAuthenticatedUser>
           }/>
           <Route path="/verify-email" element={<EmailVerification/>}/>
+          <Route path="/forgot-password"
+          element={
+              <RedirectAuthenticatedUser>
+              <ForgetPassword/>
+              </RedirectAuthenticatedUser>}/>
       </Routes>
       <Toaster/>
      </div>

@@ -18,7 +18,7 @@ authRoutes.route('/logout').post(logout);
 // Verification Routes
 authRoutes.route('/verification').post(validatorMiddleware(verificationCodeSchema),verificationEmail);
 // Forgot Password Route
-authRoutes.route('/forgotPassword').post(validatorMiddleware(forgetPasswordSchema),forgotPassword)
+authRoutes.route('/forgot-password').post(validatorMiddleware(forgetPasswordSchema),forgotPassword)
 // Reset Password Route
-authRoutes.route('/resetPassword/:token').post(resetPassword)
+authRoutes.route('/forgot-password/:token').post(resetPassword)
 export default authRoutes;

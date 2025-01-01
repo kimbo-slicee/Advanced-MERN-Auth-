@@ -33,11 +33,16 @@ const user =await UserModel.findOne(
         // Update User Document after Verification
         user.isVerified = true;
         user.verificationToken = undefined;
-        user.password = undefined;
         user.verificationTokenExpiresAt = undefined;
         await user.save();
         // Send Response
-        res.status(StatusCodes.OK).json({success:true,data:user,message:"Email Verified Successfully"})
+        res.status(StatusCodes.OK).json({
+            success:true,
+            data:{
+                ...user._doc,
+                password: undefined,
+            },
+            message:"Email Verified Successfully"})
 
 }
 // Login Controller
@@ -46,15 +51,17 @@ const login=async (req,res)=>{
      Free if u want to Use Express
      Validator or your own Validation */
     const{email,password}=req.body;
+    console.log(email,password);
     //[1]:First Check if the User Existe
     const user=await UserModel.findOne({email})
-    if(!user) throw new CustomErrors("User Not Found",StatusCodes.NOT_FOUND);
+    if(!user) throw new CustomErrors("invalid Cridentiles",StatusCodes.NOT_FOUND);
     //[2]:Check if the password provided by the use is the same as Hashed in user Document
     const comparePassword= user.comparePassword(password)
-    if(!comparePassword) throw new UnauthorizedError(getReasonPhrase(StatusCodes.UNAUTHORIZED))
+    if(!comparePassword) throw new UnauthorizedError("Invalid Cridentiles")
     //[3]:if All Checks Are Passing Good Then We will Genet New JWT Token
-    const token=user.createToken(res);
-    res.status(StatusCodes.OK).json({success:true,token:token,message:"User Login Successfully"})
+    const token= user.createToken(res);
+    user.password=undefined;
+    res.status(StatusCodes.OK).json({success:true,data:user,message:"User Logged In Successfully",token:token})
 }
 // Logout Controller
 const logout=async (req,res)=>{

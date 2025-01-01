@@ -15,7 +15,7 @@ error: null,
         const {data} = await axios.post(`${API_URL}/auth/signup`, {name,email,password});
         set({user:data,isLoading:false,isAuthenticated:true,error:null})
     }catch (error){
-        set({error:error.response.data.message,isLoading:false})
+        set({error:error.response.data.message ||"user Not found" ,isLoading:false})
         throw error;
     }
 },
@@ -24,7 +24,7 @@ error: null,
     try{
         const {data} = await axios.post(`${API_URL}/auth/verification`, {verificationToken:code});
         set({user:data.data,isLoading:false,isAuthenticated:true,error:null})
-        console.log(data)
+        console.log(data);
         return data;
     }catch (error){
         set({error:error.response.data.message,isLoading:false})
@@ -36,7 +36,8 @@ error: null,
         set({isLoading: true, error: null})
         try {
             const {data} = await axios.post(`${API_URL}/auth/login`, {email, password});
-            set({user: data, isAuthenticated: true, isLoading: false, error: null});
+            console.log(data);
+            set({user: data["data"], isAuthenticated: true, isLoading: false, error: null});
         } catch (error) {
             set({error: error.response.data.message, isLoading: false})
             throw error;
@@ -50,11 +51,31 @@ error: null,
             const {data} = await axios.get(`${API_URL}/user/profile`);
             set({user: data, isAuthenticated: true, isCheckingAuth: false});
         } catch (error) {
-            set({error: error.response.data.message, isCheckingAuth: false});
+            set({error: null, isCheckingAuth: false});
             throw error;
         }
-    }
+    },
     // logout function will be implemented in the next step
+    logout:async ()=>{
+        set({isLoading:true,error:null})
+        try{
+            await axios.post(`${API_URL}/auth/logout`)
+            set({user:null,isAuthenticated:false,isLoading:false,error:null})
+        }catch (error){
+            set({error:error.response.data.message,isLoading:false})
+            throw error;
+        }
+    },
     // forgotPassword function will be implemented in the next step
+    forgetPassword:async (email)=>{
+        set({isLoading:true,error:null,message:null})
+        try{
+             const {data}=await axios.post(`${API_URL}/auth/forgot-password`,{email})
+            set({isLoading:false,error:null,message:data.message})
+        }catch (error){
+            set({error:error.response.data.message,isLoading:false})
+            throw error;
+        }
+    },
 }))
 

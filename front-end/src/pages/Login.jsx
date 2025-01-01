@@ -2,16 +2,18 @@ import React, {useState} from 'react';
 import {motion} from "framer-motion";
 import Input from "../components/input.jsx";
 import {Loader, LockIcon, MailIcon} from "lucide-react";
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import {useAuthStore} from "../store/AuthStore.js";
 import {LoadingSpinner} from "../components/LoadingSpinner.jsx";
 const Login = (props) => {
     const [email,setEmail] = useState('');
     const [password, setPassword] = useState('');
     const {isCheckingAuth,login,isLoading,error} = useAuthStore();
+    const navigate = useNavigate();
     const handleLogin = (e) =>{
         e.preventDefault();
-        login(email,password).then(()=>console.log("login successfully")).catch()
+        login(email,password).then(()=>navigate('/')).catch((error)=>console.log(error))
+
     }
     if(isCheckingAuth) return <LoadingSpinner/>
     return(
@@ -29,11 +31,12 @@ const Login = (props) => {
                 </h2>
                 <form onSubmit={handleLogin}>
                     <Input icon={MailIcon} type="text" placeholder="Full Name" value={email}
-                           onChange={(e) => setEmail(e.target.value)}/>
-                    <Input icon={LockIcon} type="text" placeholder="Full Name" value={password}
+                           onChange={(e) => setEmail(e.target.value)} autoFocus/>
+                    <Input icon={LockIcon} type="password" placeholder="password" value={password}
                            onChange={(e) => setPassword(e.target.value)}/>
                     <div className="flex items-center mb-6">
-                        <Link to={'/verify-email'} className="text-sm text-green-400 hover:underline">
+                        <Link to={'/forgot-password'}
+                              className="text-sm text-green-400 hover:underline">
                             Forgot Password?</Link>
                     </div>
                     {error && <p className="text-red-500 font-semibold text-sm mb-4">{error}</p>}
