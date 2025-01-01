@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {motion} from "framer-motion";
 import {useAuthStore} from "../store/AuthStore.js";
 import Input from "../components/input.jsx";
@@ -7,12 +7,12 @@ import {Link} from "react-router-dom";
 
 export const ForgetPassword = () => {
     const [email, setEmail] = useState("");
-    const [issubmitted, isSetSubmitted] = useState(false);
+    const [isSubmitted, isSetSubmitted] = useState(false);
     const {isLoading,forgetPassword}=useAuthStore();
-    const handelSubmit = (e) => {
+    const handelSubmit = async (e) => {
         e.preventDefault();
         isSetSubmitted(true);
-        forgetPassword()
+        await forgetPassword(email).catch()
     }
     return (
        <motion.div
@@ -23,10 +23,11 @@ export const ForgetPassword = () => {
        className="max-w-md w-full mx-auto bg-gray-800 bg-opacity-50 backdrop-filter backdrop-blur-xl
        rounded-2xl shadow-2xl overflow-hidden">
            <div className="p-8">
-               <h2 className="text-3xl font-bold mb-6 text-center bg-gradient-to-r from-green-400 to-emerald-500 text-transparent bg-clip-text">
+               <h2 className="text-3xl font-bold mb-6 text-center
+                bg-gradient-to-r from-green-400 to-emerald-500 text-transparent bg-clip-text uppercase">
                    Forgot Password
                </h2>
-               {isSetSubmitted ? (
+               {!isSubmitted ? (
                    <form onSubmit={handelSubmit}>
                        <p className="text-gray-300 mb-6 text-center">
                            Enter your email address and we will send you a link to reset your password
@@ -48,7 +49,7 @@ export const ForgetPassword = () => {
                         hover:to-emerald-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2
                         focus:ring-offset-gray-900 transition-all duration-500"
                        >
-                           {isLoading ? <Loader className="size-6 animate-ping mx-auto"/> : "Send Reset Link"}
+                           {isLoading ? <Loader className="size-6 animate-spin mx-auto"/> : "Send Reset Link"}
                        </motion.button>
 
                    </form>

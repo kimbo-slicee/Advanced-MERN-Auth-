@@ -9,6 +9,7 @@ import {useEffect} from "react";
 import DashboardPage from "./pages/DashboardPage.jsx";
 import {LoadingSpinner} from "./components/LoadingSpinner.jsx";
 import {ForgetPassword} from "./pages/ForgetPassword.jsx";
+import {ResetPassword} from "./pages/ResetPassword.jsx";
 const ProtectedRoute = ({ children }) => {
     const { isAuthenticated, user } = useAuthStore();
     if (!isAuthenticated) {
@@ -60,12 +61,23 @@ const App=()=>{
                     <Signup/>
                 </RedirectAuthenticatedUser>
           }/>
-          <Route path="/verify-email" element={<EmailVerification/>}/>
+          <Route path="/verify-email" element={
+              <RedirectAuthenticatedUser>
+                  <EmailVerification/>
+              </RedirectAuthenticatedUser>
+              }/>
           <Route path="/forgot-password"
           element={
               <RedirectAuthenticatedUser>
               <ForgetPassword/>
               </RedirectAuthenticatedUser>}/>
+          <Route path="/forgot-password/:token" element={
+              <RedirectAuthenticatedUser>
+                    <ResetPassword/>
+                </RedirectAuthenticatedUser>
+
+
+          }/>
       </Routes>
       <Toaster/>
      </div>

@@ -71,7 +71,7 @@ res.status(StatusCodes.OK).json({success:true,message:"Logged Out successfully"}
 // Forgot Password Controller
 const forgotPassword=async (req,res)=>{
     const user=await UserModel.findOne({...req.body});
-    if(!user) throw new CustomErrors("User Withe Mail Doesn't Existe ",StatusCodes.NOT_FOUND);
+    if(!user) throw new CustomErrors("User Not Found",StatusCodes.NOT_FOUND);
     // If The User Existe We Will send New Verification Code
     const restToken=crypto.randomBytes(20).toString("hex")
     //Important Note The Crypto It's now a built-in Node
@@ -81,16 +81,16 @@ const forgotPassword=async (req,res)=>{
     user.restPasswordExpiresAt=restTokenExpirationDate;
     await user.save();
     //Send Email To Reset Password
-    await sendPasswordRestEmail(user.email,`${process.env.CLINET_URL}/rest-password/${restToken}`);
+    await sendPasswordRestEmail(user.email,`${process.env.CLIENT_URL}/forgot-password/${restToken}`);
     res.status(StatusCodes.OK).json({success:true,message:"Password reset link sent to Your Email"})
 
 }
 // Reset Password Controller
 const  resetPassword=async (req,res)=>{
 const {params:{token}, body:{password}}=req
-    if(!token || !password) throw new BadRequestError(getReasonPhrase(StatusCodes.BAD_REQUEST));
+    if(!token || !password) throw new BadRequestError("Invalid Token or Password");
     const user=await UserModel.findOne({restPasswordToken:token,restPasswordExpiresAt: {$gt:Date.now()}});
-    if (!user) throw new CustomErrors("User Not Found ",StatusCodes.NOT_FOUND);
+    if (!user) throw new CustomErrors("Invalid Token",StatusCodes.NOT_FOUND);
     const salt=await bcrypt.genSalt(10)
     user.password=await bcrypt.hash(password, salt);
     user.restPasswordToken=undefined;

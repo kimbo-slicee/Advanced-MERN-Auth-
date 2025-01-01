@@ -9,6 +9,7 @@ isAuthenticated: false,
 isLoading:false,
 isCheckingAuth: false,
 error: null,
+message:null,
     signup: async (email, password,name) => {
     set({ isLoading: true ,error:null})
     try{
@@ -77,5 +78,17 @@ error: null,
             throw error;
         }
     },
+    // resetPassword function will be implemented in the next step
+    resetPassword:async (token,password)=>{
+        set({isLoading:true,error:null})
+        try{
+            const {data}=await axios.post(`${API_URL}/auth/forgot-password/${token}`,{password})
+            set({isLoading:false,error:null,message:data.message})
+        }catch (error){
+            set({error:error.response.data.message || "Error Resting Password",isLoading:false})
+            throw error;
+        }
+    }
+
 }))
 
