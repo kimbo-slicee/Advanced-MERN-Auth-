@@ -3,10 +3,9 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "dev": "cross-env NODE_ENV=development nodemon back-end/server.js",
-    "start": "cross-env NODE_ENV=production node back-end/server.js",
-    "build": "npm install && npm install --prefix front-end && npm run build --prefix front-end",
-    "serve": "nodemon back-end/server.js"
+    "dev": "nodemon back-end/server.js",
+    "start": "node back-end/server.js",
+    "build": "npm install && npm install --prefix front-end && npm run build --prefix front-end"
   },
   "keywords": [],
   "author": "Me",
@@ -30,8 +29,5 @@
     "swagger-ui-express": "^5.0.1",
     "validator": "^13.12.0",
     "yamljs": "^0.3.0"
-  },
-  "devDependencies": {
-    "cross-env": "^7.0.3"
   }
 }
