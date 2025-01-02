@@ -1,6 +1,6 @@
 import Joi from "joi";
 
-// Joi User login Schema
+// auth schema for login and signup validation
 export const loginSchema = Joi.object({
     email: Joi.string().email().required().messages({
         "string.empty": "Email is required",

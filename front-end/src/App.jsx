@@ -10,6 +10,7 @@ import DashboardPage from "./pages/DashboardPage.jsx";
 import {LoadingSpinner} from "./components/LoadingSpinner.jsx";
 import {ForgetPassword} from "./pages/ForgetPassword.jsx";
 import {ResetPassword} from "./pages/ResetPassword.jsx";
+import NotFoundPage from "./pages/NotFoundPage.jsx";
 const ProtectedRoute = ({ children }) => {
     const { isAuthenticated, user } = useAuthStore();
     if (!isAuthenticated) {
@@ -75,9 +76,8 @@ const App=()=>{
               <RedirectAuthenticatedUser>
                     <ResetPassword/>
                 </RedirectAuthenticatedUser>
-
-
           }/>
+            <Route path="*" element={<NotFoundPage/>}/>
       </Routes>
       <Toaster/>
      </div>

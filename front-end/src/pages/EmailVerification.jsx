@@ -13,11 +13,11 @@ const EmailVerificationPage = () => {
 
     // handle change in input fields
     const handleChange = (index, value) => {
-        const newCode = [...code];
+        const newCode = [...code];// shallow copy of the code array
         // Handle pasted content
         if (value.length > 1) {
-            const pastedCode = value.slice(0, 6).split("");
-            for (let i = 0; i < 6; i++) {
+            const pastedCode = value.slice(0,6).split("");
+            for (let i = 0; i < pastedCode.length; i++) {
                 newCode[i] = pastedCode[i] || "";
             }
             setCode(newCode);
@@ -45,6 +45,7 @@ const EmailVerificationPage = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         const verificationCode = code.join("");
+        inputRefs.current[0].autoFocus=true;
         try {
             await verifyEmail(verificationCode);
             toast.success("Email verified successfully");

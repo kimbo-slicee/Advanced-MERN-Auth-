@@ -1,6 +1,6 @@
 import UserModel from "../models/User.model.js";
 import {BadRequestError, CustomErrors, UnauthorizedError} from "../errors/index.js";
-import {getReasonPhrase, StatusCodes} from "http-status-codes";
+import {StatusCodes} from "http-status-codes";
 import {
     sendPasswordRestEmail,
     sendPasswordRestSuccessEmail,

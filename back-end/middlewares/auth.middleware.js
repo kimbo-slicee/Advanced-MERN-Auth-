@@ -4,7 +4,7 @@ export const authMiddleware = (req, res, next) => {
     try {
         // Ensure cookies are available
         const token = req.cookies?.token;
-        // Check if the token is present
+        // If no token is found, throw an error
         if (!token) {
             throw new UnauthorizedError("Unauthorized: No token provided");
         }

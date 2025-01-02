@@ -25,7 +25,7 @@ export const welcomeEmail=async (email,name)=>{
             to: recipient,
             template_uuid: process.env.TEMPLATE_UUID,
             template_variables: {
-                "company_info_name": "Hello World ",
+                "company_info_name": "Auth System",
                 "name": name,
             }
         })
