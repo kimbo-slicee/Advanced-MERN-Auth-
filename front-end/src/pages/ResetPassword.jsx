@@ -48,8 +48,6 @@ export const ResetPassword = () => {
                      <p className="text-gray-300 mb-6 text-center">
                           Enter your new password
                      </p>
-                    {error && <p className="text-red-500 text-center mt-4">{error}</p>}
-                    {message && <p className="text-green-500 text-center mt-4">{message}</p>}
                      <Input
                          icon={Mail}
                           type="password"

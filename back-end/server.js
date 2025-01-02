@@ -3,6 +3,7 @@ import 'express-async-errors';
 import cors from "cors";
 import express from "express";
 import cookieParser from "cookie-parser";
+import path from "path";
 
 import connectDB from "./config/mongoDB.js";
 import authRoutes from "./routes/auth.route.js";
@@ -12,13 +13,21 @@ import errorHandlerMiddleware from "./middlewares/errorHandler.middleware.js";
 
 const port = process.env.PORT || 5000;
 const app = express();
+const __dirname = path.resolve();
 
 // Validate required environment variables
 if (!process.env.CLIENT_URL || !process.env.JWT_SECRET) {
     console.error("Missing required environment variables");
     process.exit(1);
 }
+//
+if (process.env.NODE_ENV === "production") {
+    app.use(express.static(path.join(__dirname, "/frontend/dist")));
+    app.get("*", (req, res) =>{
+        res.sendFile(path.resolve(__dirname, "frontend", "dist", "index.html"));
+    });
 
+}
 // Middleware setup
 app.use(cors({
     origin: process.env.CLIENT_URL, // Support multiple origins if needed
