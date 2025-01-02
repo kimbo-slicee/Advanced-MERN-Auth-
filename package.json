@@ -3,13 +3,13 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon back-end/server.js",
+    "dev":   " nodemon back-end/server.js",
     "start": "node back-end/server.js",
-    "build": "npm install && npm install --prefix front-end && npm run build --prefix front-end"
+    "build": "npm install --include=dev && npm install --prefix front-end && npm run build --prefix front-end"
   },
   "keywords": [],
   "author": "Me",
-  "license": "MIT",
+  "license": "ISC",
   "description": "Advanced MERN Auth",
   "type": "module",
   "dependencies": {
@@ -24,13 +24,12 @@
     "jsonwebtoken": "^9.0.2",
     "mailtrap": "^3.4.0",
     "mongoose": "^8.9.2",
-    "nodemon": "^3.1.9",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.1",
     "validator": "^13.12.0",
     "yamljs": "^0.3.0"
   },
   "devDependencies": {
-    "vite": "^6.0.7"
+    "nodemon": "^3.1.9"
   }
 }

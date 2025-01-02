@@ -5,13 +5,12 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "npx vite build",
     "lint": "eslint .",
     "preview": "vite preview"
   },
   "dependencies": {
     "axios": "^1.7.9",
-    "axois": "^0.0.1-security",
     "back-end": "file:..",
     "framer-motion": "^11.15.0",
     "lucide-react": "^0.469.0",
