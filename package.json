@@ -3,9 +3,9 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "dev":   " nodemon back-end/server.js",
+    "dev":   "nodemon back-end/server.js",
     "start": "node back-end/server.js",
-    "build": "npm install --include=dev && npm install --prefix front-end && npm run build --prefix front-end"
+    "build": "npm install -g vite && npm install && npm install --prefix front-end && npm run build --prefix front-end\n"
   },
   "keywords": [],
   "author": "Me",

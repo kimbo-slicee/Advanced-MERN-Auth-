@@ -55,14 +55,14 @@ return (
              <Input
                  icon={MailIcon}
                  type="email"
-                 placeholder="Email"
+                 placeholder="Enter Email"
                  value={email}
                  onChange={(e)=>setEmail(e.target.value)}
              />
              <Input
                  icon={LockIcon}
                  type="password"
-                 placeholder="Full Name"
+                 placeholder="Enter Password"
                  value={password}
                  onChange={(e)=>setPassword(e.target.value)}
              />
