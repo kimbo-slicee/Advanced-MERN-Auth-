@@ -5,7 +5,8 @@
   "scripts": {
     "dev":   "nodemon back-end/server.js",
     "start": "node back-end/server.js",
-    "build": "npm install -g vite && npm install && npm install --prefix front-end && npm run build --prefix front-end\n"
+    "postinstall": "npm install --prefix front-end",
+    "build": "npm install --legacy-peer-deps && npm install --prefix front-end && npm run build --prefix front-end\n"
   },
   "keywords": [],
   "author": "Me",
