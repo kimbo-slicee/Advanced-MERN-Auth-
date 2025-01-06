@@ -15,13 +15,13 @@ This repository contains an advanced authentication system built with the MERN (
 ## Screenshots
 
 ### Logain Page
-![Logain Page](./captures/4.PNG)
+![Logain Page](./captures/loginPage.PNG)
 
 ### Registration Page
 ![Registration Page](./captures/2.PNG)
 
 ### Password Validation
-![Password Validation](./captures/3.PNG)
+![Password Validation](./captures/forgetPassword.PNG)
 
 ### Email Verification
 ![Email Verification](./captures/Capture.PNG)
